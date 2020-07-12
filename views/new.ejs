@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("partials/header.ejs") %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keep Notes</title>
+</head>
+<body>
+    <center>
+    <form action="/new" method="POST" class="form1">
+        <div class="form-group">
+            <label aria-setsize="10"><b>Title</b></label>
+            <br><input type="text" name="title" class="form-control" >
+            <br><br>
+            <label><b>Notes</b></label><br>
+            <br><textarea class="form-control" name="content" rows="5" ></textarea>
+            <input type="hidden" name="user" value=<%=user %> />
+      </div>
+     <button type="submit" name="button" class="btn btn-primary">Save</button>
+     <a href="/dashboard"><button type="button" class="btn btn-dark">Back</button></a>
+    </form>
+   
+    </center>
+
+       
+</body>
+</html>
