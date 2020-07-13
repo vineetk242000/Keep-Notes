@@ -13,9 +13,22 @@ const {ensureAuthenticated}=require("./auth")
 require('./passport')(passport);
 const User=require('./user');
 const Note=require("./notes")
-mongoose.connect("mongodb+srv://vineetk242000:vineet001@keep-notes.aas1c.mongodb.net/User?retryWrites=true&w=majority", {useUnifiedTopology: true},
-console.log("Mongoose connected"));
 
+
+const connect = async function () {
+  const uri = "mongodb+srv://vineetk242000:vineet001@keep-notes.aas1c.mongodb.net/User?retryWrites=true&w=majority"; // Will return DB URI 
+  console.log(`Connecting to DB - uri: ${uri}`);
+  return mongoose.connect(uri, {useNewUrlParser: true});
+};
+
+
+(async () => {
+  try {
+   const connected = await connect();
+  } catch(e) {
+   console.log('Error happend while connecting to the DB: ', e.message)
+  }
+})();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -45,7 +58,7 @@ app.use((req,res,next)=>{
 
 //passport middleware
 
-
+let id=undefined
 app.use(function(err, req, res, next) {
   console.log(err);
 });
@@ -159,7 +172,7 @@ res.redirect("/sign_in");
 
 app.get("/new",ensureAuthenticated,function(req,res){
   res.render("new.ejs",{
-    user:req.user._id
+    user:req.user
   });
 });
 
@@ -181,12 +194,21 @@ app.get("/success",function(req,res){
   res.render("success.ejs")
 });
 
+app.get("/delete",function(req,res){
+  Note.findById(req.body.id, function(err, posts){
+    if(err) throw err;
+    console.log(posts);
+    res.redirect("/dashboard");
+  });
+})
+
+
 
   
   
   
 
-app.listen(3000, function() {
+app.listen(process.env.port||3000, function() {
   console.log("Server started on port 3000");
 });
 
