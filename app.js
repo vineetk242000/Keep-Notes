@@ -16,7 +16,7 @@ const Note=require("./notes")
 
 
 const connect = async function () {
-  const uri = "mongodb+srv://vineetk242000:vineet001@keep-notes.aas1c.mongodb.net/User?retryWrites=true&w=majority"; // Will return DB URI 
+  const uri = ["Database url"]; // Will return DB URI 
   console.log(`Connecting to DB - uri: ${uri}`);
   return mongoose.connect(uri, {useNewUrlParser: true});
 };
@@ -157,7 +157,6 @@ app.post("/sign_in",bodyParser.json(),function(req,res,next){
     passport.authenticate('local', { 
     successRedirect: '/dashboard',
     failureRedirect:"/sign_in",
-    failureFlash: true,
   })(req,res,next);
 
 })
@@ -194,10 +193,9 @@ app.get("/success",function(req,res){
   res.render("success.ejs")
 });
 
-app.get("/delete",function(req,res){
-  Note.findById(req.body.id, function(err, posts){
+app.get("/delete/:id",function(req,res){
+  Note.findByIdAndDelete(req.params.id, function(err, posts){
     if(err) throw err;
-    console.log(posts);
     res.redirect("/dashboard");
   });
 })

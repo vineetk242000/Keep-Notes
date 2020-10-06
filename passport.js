@@ -6,13 +6,14 @@ const User = require('./user');
 
 
 module.exports = function(passport) {
+  let errors =[];
   passport.use(
     new LocalStrategy({usernameField:"email",passwordField:"pass"},(email,pass,done)=>{
   
       User.findOne({email:email})
       .then(user =>{
         if(!user){
-          return done(null,false,{message: " This email is not Registered"});
+          return done(null,false,errors.push({msg:" This email is not Registered"}));
         }
   
   
@@ -21,7 +22,7 @@ module.exports = function(passport) {
           if(isMatch){
             return done(null,user);
           }else{
-            return done(null,false,{messsge:"Password Incorrect"});
+            return done(null,false,errors.push({msg:"Password Incorrect"}));
           }
         });
       })
